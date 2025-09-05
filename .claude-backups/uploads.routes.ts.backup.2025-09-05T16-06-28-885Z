@@ -1,0 +1,19 @@
+import { Router } from 'express';
+import { UploadsController } from '@/controllers/uploads.controller';
+import { authenticate } from '@/middleware/auth.middleware';
+import { validateBody, validateParams, validateQuery } from '@/middleware/validation.middleware';
+import { uploadSchema } from '@/utils/validation.util';
+import { z } from 'zod';
+
+const router = Router();
+const uploadsController = new UploadsController();
+
+// All upload routes require authentication
+router.use(authenticate);
+
+// Generate presigned URL for single file
+router.post(
+  '/sign',
+  validateBody(uploadSchema),
+  uploadsController.generateUploadUrl
+);

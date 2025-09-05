@@ -1,0 +1,338 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  username    String?  @unique
+  displayName String?
+  avatar      String?
+  bio         String?
+  
+  // Reputation system
+  reputation  Int      @default(0)
+  
+  // Auth related
+  emailVerified Boolean @default(false)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  spots           Spot[]
+  spotRatings     SpotRating[]
+  spotTags        SpotTag[]
+  collections     Collection[]
+  reports         Report[]
+  magicLinks      MagicLink[]
+  events          Event[]
+  eventAttendees  EventAttendee[]
+  
+  @@map("users")
+}
+
+model MagicLink {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  
+  @@map("magic_links")
+}
+
+model Category {
+  id          String @id @default(uuid())
+  name        String @unique
+  slug        String @unique
+  description String?
+  icon        String?
+  color       String @default("#3B82F6")
+  
+  // Dynamic category system
+  isOfficial  Boolean @default(false)
+  proposalCount Int   @default(0)
+  approvalThreshold Int @default(10)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  spots Spot[]
+  
+  @@map("categories")
+}
+
+model Spot {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  
+  // Location data (using PostGIS)
+  location    Unsupported("geometry(Point, 4326)")
+  latitude    Float
+  longitude   Float
+  address     String?
+  city        String?
+  country     String?
+  
+  // Metadata
+  verified    Boolean @default(false)
+  featured    Boolean @default(false)
+  
+  // Stats
+  viewCount   Int     @default(0)
+  
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  images      SpotImage[]
+  ratings     SpotRating[]
+  tags        SpotTag[]
+  reports     Report[]
+  collections CollectionSpot[]
+  events      Event[]
+  
+  @@map("spots")
+}
+
+model SpotImage {
+  id       String  @id @default(uuid())
+  url      String
+  key      String  // R2 object key
+  alt      String?
+  caption  String?
+  order    Int     @default(0)
+  
+  // Relations
+  spotId String
+  spot   Spot   @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  
+  @@map("spot_images")
+}
+
+model SpotRating {
+  id String @id @default(uuid())
+  
+  // Rating system (thumbs up/down instead of stars)
+  isPositive Boolean
+  comment    String?
+  
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  spotId String
+  spot   Spot   @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, spotId])
+  @@map("spot_ratings")
+}
+
+model Tag {
+  id          String @id @default(uuid())
+  name        String @unique
+  slug        String @unique
+  description String?
+  category    String // e.g., "surface", "difficulty", "features", "conditions"
+  color       String @default("#6B7280")
+  
+  // Usage stats
+  usageCount Int @default(0)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  spotTags SpotTag[]
+  
+  @@map("tags")
+}
+
+model SpotTag {
+  id String @id @default(uuid())
+  
+  // Relations
+  spotId String
+  spot   Spot   @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  
+  @@unique([spotId, tagId, userId])
+  @@map("spot_tags")
+}
+
+model Collection {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  isPublic    Boolean @default(false)
+  
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  spots CollectionSpot[]
+  
+  @@map("collections")
+}
+
+model CollectionSpot {
+  id String @id @default(uuid())
+  
+  // Relations
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  spotId       String
+  spot         Spot       @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  
+  // Metadata
+  order Int @default(0)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  
+  @@unique([collectionId, spotId])
+  @@map("collection_spots")
+}
+
+model Event {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  
+  // Event details
+  startTime   DateTime
+  endTime     DateTime?
+  maxAttendees Int?
+  
+  // Status
+  status      EventStatus @default(ACTIVE)
+  
+  // Relations
+  organizerId String
+  organizer   User   @relation(fields: [organizerId], references: [id])
+  spotId      String
+  spot        Spot   @relation(fields: [spotId], references: [id])
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  attendees EventAttendee[]
+  
+  @@map("events")
+}
+
+model EventAttendee {
+  id String @id @default(uuid())
+  
+  // Relations
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  
+  // Status
+  status EventAttendeeStatus @default(INTERESTED)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([eventId, userId])
+  @@map("event_attendees")
+}
+
+model Report {
+  id      String     @id @default(uuid())
+  reason  ReportType
+  comment String?
+  
+  // Status
+  status     ReportStatus @default(PENDING)
+  resolution String?
+  
+  // Relations
+  reporterId String
+  reporter   User   @relation(fields: [reporterId], references: [id])
+  spotId     String?
+  spot       Spot?  @relation(fields: [spotId], references: [id])
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("reports")
+}
+
+// Enums
+enum EventStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETED
+}
+
+enum EventAttendeeStatus {
+  INTERESTED
+  ATTENDING
+  NOT_ATTENDING
+}
+
+enum ReportType {
+  INAPPROPRIATE_CONTENT
+  SPAM
+  INCORRECT_LOCATION
+  SAFETY_CONCERN
+  DUPLICATE
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+  DISMISSED
+}
