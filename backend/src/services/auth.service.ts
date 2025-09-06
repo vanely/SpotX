@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User } from '../lib/prisma';
 import crypto from 'crypto';
 import { db } from '@/config/database.config';
 import { generateToken } from '@/utils/jwt.util';

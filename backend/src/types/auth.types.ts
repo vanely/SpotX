@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User } from '../lib/prisma';
 
 export interface AuthenticatedUser extends Omit<User, 'createdAt' | 'updatedAt'> {
   createdAt: string;

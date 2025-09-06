@@ -1,4 +1,4 @@
-import { Spot, SpotImage, SpotRating, SpotTag, Category, Tag, User } from '@prisma/client';
+import { Spot, SpotImage, SpotRating, SpotTag, Category, Tag, User } from '../lib/prisma';
 
 export interface SpotWithDetails extends Omit<Spot, 'createdAt' | 'updatedAt'> {
   createdAt: string;
