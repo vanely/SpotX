@@ -33,7 +33,7 @@ export class SpotsController {
     const { spotId } = req.params;
     const userId = req.userId; // Optional for view tracking
 
-    const spot = await this.spotsService.getSpotById(spotId, userId);
+    const spot = await this.spotsService.getSpotById(spotId as string, userId);
 
     if (!spot) {
       res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -57,7 +57,7 @@ export class SpotsController {
     const userId = req.userId;
     const updateData = req.body;
 
-    const spot = await this.spotsService.updateSpot(spotId, userId, updateData);
+    const spot = await this.spotsService.updateSpot(spotId as string, userId, updateData);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -73,7 +73,7 @@ export class SpotsController {
     const { spotId } = req.params;
     const userId = req.userId;
 
-    await this.spotsService.deleteSpot(spotId, userId);
+    await this.spotsService.deleteSpot(spotId as string, userId);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -178,7 +178,7 @@ export class SpotsController {
     const userId = req.userId;
 
     // Verify spot exists and user owns it
-    const spot = await this.spotsService.getSpotById(spotId);
+    const spot = await this.spotsService.getSpotById(spotId as string);
     
     if (!spot) {
       res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -231,7 +231,7 @@ export class SpotsController {
     const db = require('@/config/database.config').db;
 
     // Verify spot exists and user owns it
-    const spot = await this.spotsService.getSpotById(spotId);
+    const spot = await this.spotsService.getSpotById(spotId as string);
     
     if (!spot) {
       res.status(HTTP_STATUS.NOT_FOUND).json({

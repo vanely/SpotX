@@ -67,80 +67,6 @@ export class EmailService {
                 color: #3B82F6;
                 margin-bottom: 10px;
             }
-            .features {
-                background: #f8fafc;
-                border-radius: 8px;
-                padding: 20px;
-                margin: 20px 0;
-            }
-            .feature {
-                margin: 10px 0;
-                display: flex;
-                align-items: center;
-            }
-            .feature-icon {
-                margin-right: 10px;
-                font-size: 18px;
-            }
-            .footer {
-                text-align: center;
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid #e5e7eb;
-                color: #6b7280;
-                font-size: 14px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <div class="logo">🗺️ SpotX</div>
-                <h1>Welcome to SpotX!</h1>
-            </div>
-            
-            <p>${greeting},</p>
-            
-            <p>Welcome to SpotX - the community-driven platform for discovering and sharing amazing spots for skateboarding, rollerblading, parkour, and more!</p>
-            
-            <div class="features">
-                <h3>Get started by:</h3>
-                <div class="feature">
-                    <span class="feature-icon">🗺️</span>
-                    <span>Exploring spots near you on our interactive map</span>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">📍</span>
-                    <span>Adding your favorite spots to help the community</span>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">⭐</span>
-                    <span>Rating and tagging spots with useful information</span>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">📚</span>
-                    <span>Creating collections of your favorite spots</span>
-                </div>
-            </div>
-            
-            <p>Join thousands of riders who are already using SpotX to discover their next adventure!</p>
-            
-            <div class="footer">
-                <p>Happy spot hunting! 🛹</p>
-                <p>The SpotX Team</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    `;
-  }
-}
-            .logo {
-                font-size: 28px;
-                font-weight: bold;
-                color: #3B82F6;
-                margin-bottom: 10px;
-            }
             .button {
                 display: inline-block;
                 background: #3B82F6;
@@ -230,4 +156,77 @@ export class EmailService {
                 text-align: center;
                 margin-bottom: 30px;
             }
+            .logo {
+                font-size: 28px;
+                font-weight: bold;
+                color: #3B82F6;
+                margin-bottom: 10px;
+            }
+            .features {
+                background: #f8fafc;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 20px 0;
+            }
+            .feature {
+                margin: 10px 0;
+                display: flex;
+                align-items: center;
+            }
+            .feature-icon {
+                margin-right: 10px;
+                font-size: 18px;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #e5e7eb;
+                color: #6b7280;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="logo">🗺️ SpotX</div>
+                <h1>Welcome to SpotX!</h1>
+            </div>
             
+            <p>${greeting},</p>
+            
+            <p>Welcome to SpotX - the community-driven platform for discovering and sharing amazing spots for skateboarding, rollerblading, parkour, and more!</p>
+            
+            <div class="features">
+                <h3>Get started by:</h3>
+                <div class="feature">
+                    <span class="feature-icon">🗺️</span>
+                    <span>Exploring spots near you on our interactive map</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📍</span>
+                    <span>Adding your favorite spots to help the community</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">⭐</span>
+                    <span>Rating and tagging spots with useful information</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📚</span>
+                    <span>Creating collections of your favorite spots</span>
+                </div>
+            </div>
+            
+            <p>Join thousands of riders who are already using SpotX to discover their next adventure!</p>
+            
+            <div class="footer">
+                <p>Happy spot hunting! 🛹</p>
+                <p>The SpotX Team</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+  }
+}

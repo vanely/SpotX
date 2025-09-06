@@ -152,8 +152,8 @@ export class CategoriesService {
       data: {
         name,
         slug,
-        description,
-        icon,
+        description: description || null,
+        icon: icon || null,
         color,
         isOfficial: true, // Admin-created categories are official by default
       },
@@ -216,8 +216,8 @@ export class CategoriesService {
       data: {
         name,
         slug,
-        description,
-        icon,
+        description: description || null,
+        icon: icon || null,
         color,
         isOfficial: false,
         proposalCount: 1,
@@ -376,7 +376,7 @@ export class CategoriesService {
       data: {
         name,
         slug,
-        description,
+        description: description || null,
         category,
         color,
       },

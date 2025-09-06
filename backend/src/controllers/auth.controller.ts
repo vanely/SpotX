@@ -112,7 +112,7 @@ export class AuthController {
   getUserById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
 
-    const user = await this.authService.getUserById(userId);
+    const user = await this.authService.getUserById(userId as string);
 
     if (!user) {
       res.status(HTTP_STATUS.NOT_FOUND).json({

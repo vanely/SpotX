@@ -109,7 +109,7 @@ export class UploadsService {
   extractFileKeyFromUrl(url: string): string | null {
     try {
       const publicUrlBase = r2Config.publicUrl;
-      if (url.startsWith(publicUrlBase)) {
+      if (publicUrlBase && url.startsWith(publicUrlBase)) {
         return url.substring(publicUrlBase.length + 1);
       }
       return null;

@@ -356,8 +356,8 @@ export class SpotsService {
         break;
     }
 
-    let spots;
-    let total;
+    let spots: any[] = [];
+    let total: number = 0;
 
     if (latitude && longitude) {
       // Use PostGIS for location-based search
@@ -565,13 +565,13 @@ export class SpotsService {
       },
       update: {
         isPositive,
-        comment,
+        comment: comment || null,
       },
       create: {
         userId,
         spotId,
         isPositive,
-        comment,
+        comment: comment || null,
       },
     });
 

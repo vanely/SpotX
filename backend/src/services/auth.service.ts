@@ -23,19 +23,23 @@ export class AuthService {
       where: { email },
     });
 
+    if (!user) {
+      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
+    }
+
     // Create magic link record
     await db.magicLink.create({
       data: {
         email,
         token,
         expiresAt,
-        userId: user?.id,
+        userId: user.id,
       },
     });
 
     // Send email
     const magicLinkUrl = `${APP_CONFIG.FRONTEND_URL}/auth/verify?token=${token}`;
-    await this.emailService.sendMagicLink(email, magicLinkUrl, user?.displayName);
+    await this.emailService.sendMagicLink(email, magicLinkUrl, user.displayName || undefined);
   }
 
   async verifyMagicLink(token: string): Promise<{ user: AuthenticatedUser; accessToken: string; isNewUser: boolean }> {

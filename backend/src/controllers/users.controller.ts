@@ -16,7 +16,7 @@ export class UsersController {
   getUserProfile = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const userId = req.userId;
 
-    const profile = await this.usersService.getUserProfile(userId);
+    const profile = await this.usersService.getUserProfile(userId as string);
 
     if (!profile) {
       res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -38,7 +38,7 @@ export class UsersController {
   getPublicUserProfile = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
 
-    const profile = await this.usersService.getPublicUserProfile(userId);
+    const profile = await this.usersService.getPublicUserProfile(userId as string);
 
     if (!profile) {
       res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -58,8 +58,8 @@ export class UsersController {
   searchUsers = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const searchParams: UserSearchParams = {
       search: req.query.search as string,
-      limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
-      offset: req.query.offset ? parseInt(req.query.offset as string) : undefined,
+      limit: req.query.limit ? parseInt(req.query.limit as string) : 20,
+      offset: req.query.offset ? parseInt(req.query.offset as string) : 0,
       sortBy: req.query.sortBy as 'newest' | 'reputation' | 'spots' | 'username',
     };
 
@@ -80,7 +80,7 @@ export class UsersController {
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
     const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
 
-    const spots = await this.usersService.getUserSpots(userId, limit, offset);
+    const spots = await this.usersService.getUserSpots(userId as string, limit, offset);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -100,7 +100,7 @@ export class UsersController {
     // Only show private collections if user is viewing their own profile
     const includePrivate = userId === requestingUserId;
 
-    const collections = await this.usersService.getUserCollections(userId, includePrivate);
+    const collections = await this.usersService.getUserCollections(userId as string, includePrivate);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -114,7 +114,7 @@ export class UsersController {
   getMyCollections = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const userId = req.userId;
 
-    const collections = await this.usersService.getUserCollections(userId, true);
+    const collections = await this.usersService.getUserCollections(userId as string, true);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -129,7 +129,7 @@ export class UsersController {
     const { collectionId } = req.params;
     const userId = req.userId; // For privacy check
 
-    const collection = await this.usersService.getCollectionById(collectionId, userId);
+    const collection = await this.usersService.getCollectionById(collectionId as string, userId as string);
 
     if (!collection) {
       res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -152,7 +152,7 @@ export class UsersController {
     const userId = req.userId;
     const collectionData = req.body;
 
-    const collection = await this.usersService.createCollection(userId, collectionData);
+    const collection = await this.usersService.createCollection(userId as string, collectionData);
 
     res.status(HTTP_STATUS.CREATED).json({
       success: true,
@@ -169,7 +169,7 @@ export class UsersController {
     const userId = req.userId;
     const updateData = req.body;
 
-    const collection = await this.usersService.updateCollection(userId, collectionId, updateData);
+    const collection = await this.usersService.updateCollection(userId as string, collectionId as string, updateData);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -185,7 +185,7 @@ export class UsersController {
     const { collectionId } = req.params;
     const userId = req.userId;
 
-    await this.usersService.deleteCollection(userId, collectionId);
+    await this.usersService.deleteCollection(userId as string, collectionId as string);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -198,7 +198,7 @@ export class UsersController {
     const userId = req.userId;
     const { collectionId, spotId } = req.body;
 
-    await this.usersService.addSpotToCollection(userId, { collectionId, spotId });
+    await this.usersService.addSpotToCollection(userId as string, { collectionId, spotId });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -211,7 +211,7 @@ export class UsersController {
     const { collectionId, spotId } = req.params;
     const userId = req.userId;
 
-    await this.usersService.removeSpotFromCollection(userId, collectionId, spotId);
+    await this.usersService.removeSpotFromCollection(userId as string, collectionId as string, spotId as string);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -225,7 +225,7 @@ export class UsersController {
     const { spotOrders } = req.body; // Array of { spotId, order }
     const userId = req.userId;
 
-    await this.usersService.reorderCollectionSpots(userId, collectionId, spotOrders);
+    await this.usersService.reorderCollectionSpots(userId as string, collectionId as string, spotOrders);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -253,7 +253,7 @@ export class UsersController {
   getUserStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
 
-    const stats = await this.usersService.getUserStats(userId);
+    const stats = await this.usersService.getUserStats(userId as string);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,

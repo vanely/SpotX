@@ -14,7 +14,7 @@ export const createEmailTransporter = () => {
     throw new Error('Email credentials not configured');
   }
 
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     service: emailConfig.service,
     host: emailConfig.host,
     port: emailConfig.port,

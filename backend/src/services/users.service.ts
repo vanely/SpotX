@@ -376,7 +376,7 @@ export class UsersService {
     const collection = await db.collection.create({
       data: {
         name,
-        description,
+        description: description || null,
         isPublic,
         userId,
       },

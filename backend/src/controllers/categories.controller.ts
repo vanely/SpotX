@@ -39,7 +39,7 @@ export class CategoriesController {
   getCategoryById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { categoryId } = req.params;
 
-    const category = await this.categoriesService.getCategoryById(categoryId);
+    const category = await this.categoriesService.getCategoryById(categoryId as string);
 
     if (!category) {
       res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -61,7 +61,7 @@ export class CategoriesController {
   getCategoryBySlug = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { slug } = req.params;
 
-    const category = await this.categoriesService.getCategoryBySlug(slug);
+    const category = await this.categoriesService.getCategoryBySlug(slug as string);
 
     if (!category) {
       res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -114,7 +114,7 @@ export class CategoriesController {
     const { categoryId } = req.params;
     const updateData = req.body;
 
-    const category = await this.categoriesService.updateCategory(categoryId, updateData);
+    const category = await this.categoriesService.updateCategory(categoryId as string, updateData);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -129,7 +129,7 @@ export class CategoriesController {
   deleteCategory = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { categoryId } = req.params;
 
-    await this.categoriesService.deleteCategory(categoryId);
+    await this.categoriesService.deleteCategory(categoryId as string);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -155,7 +155,7 @@ export class CategoriesController {
   getTagsByCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { category } = req.params;
 
-    const tags = await this.categoriesService.getTagsByCategory(category);
+    const tags = await this.categoriesService.getTagsByCategory(category as string);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -221,7 +221,7 @@ export class CategoriesController {
     const { tagId } = req.params;
     const updateData = req.body;
 
-    const tag = await this.categoriesService.updateTag(tagId, updateData);
+    const tag = await this.categoriesService.updateTag(tagId as string, updateData);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -236,7 +236,7 @@ export class CategoriesController {
   deleteTag = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { tagId } = req.params;
 
-    await this.categoriesService.deleteTag(tagId);
+    await this.categoriesService.deleteTag(tagId as string);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,

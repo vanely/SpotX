@@ -50,7 +50,7 @@ export class UploadsController {
   deleteFile = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { fileKey } = req.params;
     
-    await this.uploadsService.deleteFile(fileKey);
+    await this.uploadsService.deleteFile(fileKey as string);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
@@ -70,7 +70,7 @@ export class UploadsController {
       return;
     }
 
-    const fileInfo = this.uploadsService.getFileInfo(url);
+    const fileInfo = this.uploadsService.getFileInfo(url as string);
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
