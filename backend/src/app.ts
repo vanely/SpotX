@@ -8,6 +8,9 @@ import dotenv from 'dotenv';
 // Import routes
 import { authRoutes } from '@/routes/auth.routes';
 import { uploadsRoutes } from '@/routes/uploads.routes';
+import { spotsRoutes } from '@/routes/spots.routes';
+import { categoriesRoutes } from '@/routes/categories.routes';
+import { usersRoutes } from '@/routes/users.routes';
 
 // Import middleware
 import { errorHandler, notFound } from '@/middleware/error.middleware';
@@ -82,14 +85,14 @@ class App {
 
     // Request logging in development
     if (process.env.NODE_ENV === 'development') {
-      this.app.use((req, res, next) => {
+      this.app.use((req, _res, next) => {
         console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
         next();
       });
     }
 
     // Health check endpoint
-    this.app.get('/health', (req, res) => {
+    this.app.get('/health', (_req, res) => {
       res.status(200).json({
         success: true,
         message: 'Server is running',
@@ -99,7 +102,7 @@ class App {
     });
 
     // API info endpoint
-    this.app.get('/api', (req, res) => {
+    this.app.get('/api', (_req, res) => {
       res.status(200).json({
         success: true,
         message: 'SpotX API v1.0',
@@ -107,8 +110,9 @@ class App {
         endpoints: {
           auth: '/api/auth',
           uploads: '/api/uploads',
-          spots: '/api/spots (coming soon)',
-          categories: '/api/categories (coming soon)',
+          spots: '/api/spots',
+          categories: '/api/categories',
+          users: '/api/users'
         },
         documentation: '/api/docs (coming soon)',
       });
@@ -122,11 +126,7 @@ class App {
     this.app.use('/api/spots', spotsRoutes);
     this.app.use('/api/categories', categoriesRoutes);
     this.app.use('/api/users', usersRoutes);
-  } // Future routes (placeholders)
-    // this.app.use('/api/spots', spotsRoutes);
-    // this.app.use('/api/categories', categoriesRoutes);
-    // this.app.use('/api/users', usersRoutes);
-  // }
+  }
 
   private initializeErrorHandling(): void {
     // 404 handler

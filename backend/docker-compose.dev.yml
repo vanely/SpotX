@@ -1,0 +1,111 @@
+services:
+  # Main API Service
+  api:
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE_API:-Dockerfile.api}
+    container_name: spotx-api
+    ports:
+      - "${API_EXTERNAL_PORT:-3333}:${API_PORT:-3333}" # this may need to be the other way around. 
+    environment:
+      - NODE_ENV=development
+      - PORT=${API_PORT:-3333}
+      - DATABASE_URL=postgresql://spotx_user:secure_password_2024@postgres:5432/spotx_db
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key_here}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1d}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - BULL_BOARD_USERNAME=${BULL_BOARD_USERNAME:-admin}
+      - BULL_BOARD_PASSWORD=${BULL_BOARD_PASSWORD:-admin123}
+      - BULL_BOARD_SESSION_SECRET=${BULL_BOARD_SESSION_SECRET:-your-session-secret-key}
+    volumes:
+      # Mount source code for development hot reloading
+      - ./src:/app/src:ro
+      # Mount Prisma schema for development
+      - ./prisma:/app/prisma:ro
+      # Mount package files for dependency checking
+      - ./package.json:/app/package.json:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      # Anonymous volume to preserve container's node_modules
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - spotx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT:-3333}/health"] # this may need to be the other way around. 
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # PostgreSQL Database (Custom Build)
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    container_name: spotx-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: spotx_db
+      POSTGRES_USER: spotx_user
+      POSTGRES_PASSWORD: secure_password_2024
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      # Persistent data storage for PostgreSQL
+      - spotx_postgres_data:/var/lib/postgresql/data
+      # Mount initialization script (read-only)
+      - ./config/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    restart: unless-stopped
+    networks:
+      - spotx-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spotx_user -d spotx_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+
+  # pgAdmin for PostgreSQL Management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: spotx-pgadmin
+    ports:
+      - "8080:8080"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@spotx.app
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - spotx_pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - spotx-network
+
+networks:
+  spotx-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  spotx_postgres_data:
+    driver: local
+  spotx_redis_data:
+    driver: local
+  spotx_pgadmin_data:
+    driver: local 
