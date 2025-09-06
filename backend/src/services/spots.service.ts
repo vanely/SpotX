@@ -41,7 +41,7 @@ export class SpotsService {
     }
 
     // Create the spot with PostGIS point
-    const spot = await db.spot.create({
+    const spot = await (db as any).spot.create({
       data: {
         ...spotData,
         latitude,

@@ -26,8 +26,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_healthy
     restart: unless-stopped
     networks:
       - spotx-network
@@ -77,8 +75,6 @@ services:
     read_only: false  # PostgreSQL needs write access to data directory
 
 volumes:
-  spotx_redis_data:
-    driver: local
   spotx_postgres_data:
     driver: local
 

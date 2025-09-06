@@ -9,7 +9,12 @@ export interface JWTPayload {
 }
 
 export const generateToken = (payload: Omit<JWTPayload, 'iat' | 'exp'>): string => {
-  return jwt.sign(payload, APP_CONFIG.JWT_SECRET, {
+  const secret = APP_CONFIG.JWT_SECRET as string;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  // hacky cast to any because I didn't want to wrestle overload types.
+  return (jwt.sign as any)(payload, secret, {
     expiresIn: APP_CONFIG.JWT_EXPIRES_IN,
   });
 };
@@ -45,5 +50,5 @@ export const extractTokenFromHeader = (authHeader: string | undefined): string |
     return null;
   }
   
-  return parts[1];
+  return parts[1] || null;
 };

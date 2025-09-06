@@ -83,16 +83,28 @@ export class SpotsController {
 
   // Search spots with pagination
   searchSpots = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    const {
+      latitude: latStr,
+      longitude: lngStr,
+      radius: radiusStr,
+      categoryId,
+      tags: tagsStr,
+      search,
+      limit: limitStr,
+      offset: offsetStr,
+      sortBy
+    } = req.query;
+
     const searchParams: SpotSearchParams = {
-      latitude: req.query.latitude ? parseFloat(req.query.latitude as string) : undefined,
-      longitude: req.query.longitude ? parseFloat(req.query.longitude as string) : undefined,
-      radius: req.query.radius ? parseFloat(req.query.radius as string) : undefined,
-      categoryId: req.query.categoryId as string,
-      tags: req.query.tags ? (req.query.tags as string).split(',') : undefined,
-      search: req.query.search as string,
-      limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
-      offset: req.query.offset ? parseInt(req.query.offset as string) : undefined,
-      sortBy: req.query.sortBy as 'distance' | 'newest' | 'oldest' | 'popular',
+      ...(latStr && { latitude: parseFloat(latStr as string) }),
+      ...(lngStr && { longitude: parseFloat(lngStr as string) }),
+      ...(radiusStr && { radius: parseFloat(radiusStr as string) }),
+      ...(categoryId && { categoryId: categoryId as string }),
+      ...(tagsStr && { tags: (tagsStr as string).split(',') }),
+      ...(search && { search: search as string }),
+      ...(limitStr && { limit: parseInt(limitStr as string) }),
+      ...(offsetStr && { offset: parseInt(offsetStr as string) }),
+      ...(sortBy && { sortBy: sortBy as 'distance' | 'newest' | 'oldest' | 'popular' }),
     };
 
     const result = await this.spotsService.searchSpots(searchParams);

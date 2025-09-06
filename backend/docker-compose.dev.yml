@@ -28,8 +28,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_healthy
     restart: unless-stopped
     networks:
       - spotx-network
@@ -105,8 +103,6 @@ networks:
 
 volumes:
   spotx_postgres_data:
-    driver: local
-  spotx_redis_data:
     driver: local
   spotx_pgadmin_data:
     driver: local 

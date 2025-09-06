@@ -4,7 +4,7 @@ import { VALIDATION_RULES } from './constants';
 // Base schemas
 export const emailSchema = z
   .string()
-  .email(VALIDATION_RULES.EMAIL_REGEX)
+  .email('Invalid email address')
   .min(1, 'Email is required');
 
 export const usernameSchema = z
