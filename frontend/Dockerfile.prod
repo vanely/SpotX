@@ -1,4 +1,4 @@
-# Production Dockerfile for Opease Frontend
+# Production Dockerfile for SpotX Frontend
 FROM node:18-alpine AS builder
 
 # Set working directory

@@ -1,4 +1,4 @@
-# Development Dockerfile for Opease Frontend
+# Development Dockerfile for SpotX Frontend
 FROM node:18-alpine
 
 # Set working directory

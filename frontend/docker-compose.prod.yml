@@ -1,18 +1,20 @@
 services:
-  opease-frontend-prod:
+  spotx-frontend-prod:
+    env_file:
+      - .env.production
     build:
       context: .
       dockerfile: Dockerfile.prod
-    image: opease-frontend-prod
-    container_name: opease-frontend-prod
+    image: spotx-frontend-prod
+    container_name: spotx-frontend-prod
     ports:
       - "80:80"
     environment:
       - NODE_ENV=production
     restart: unless-stopped
     networks:
-      - opease-prod-network
-      - opease-v2-server_opease-network
+      - spotx-prod-network
+      - spotx-v2-server_spotx-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
@@ -30,7 +32,7 @@ services:
   #     - NODE_ENV=production
   #   restart: unless-stopped
   #   networks:
-  #     - opease-prod-network
+  #     - spotx-prod-network
   #   healthcheck:
   #     test: ["CMD", "curl", "-f", "http://localhost:3333/health"]
   #     interval: 30s
@@ -38,7 +40,7 @@ services:
   #     retries: 3
 
 networks:
-  opease-prod-network:
+  spotx-prod-network:
     driver: bridge
-  opease-v2-server_opease-network:
+  spotx-v2-server_spotx-network:
     external: true

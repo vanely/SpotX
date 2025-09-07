@@ -43,10 +43,10 @@ stop-prod:
 
 # Build commands
 build-dev:
-	docker build -f Dockerfile.dev -t opease-frontend:dev .
+	docker build -f Dockerfile.dev -t spotx-frontend:dev .
 
 build-prod:
-	docker build -f Dockerfile.prod -t opease-frontend:prod .
+	docker build -f Dockerfile.prod -t spotx-frontend:prod .
 
 # Utility commands
 clean:
@@ -62,7 +62,7 @@ stop:
 
 # Shell access
 shell-dev:
-	docker-compose -f docker-compose.dev.yml exec opease-frontend-dev sh
+	docker-compose -f docker-compose.dev.yml exec spotx-frontend-dev sh
 
 shell-prod:
-	docker-compose -f docker-compose.prod.yml exec opease-frontend-prod sh
+	docker-compose -f docker-compose.prod.yml exec spotx-frontend-prod sh

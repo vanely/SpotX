@@ -5,7 +5,7 @@ export const APP_CONFIG = {
   MAGIC_LINK_EXPIRES_MINUTES: parseInt(process.env.MAGIC_LINK_EXPIRES_MINUTES || '15'),
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
   API_BASE_URL: process.env.API_BASE_URL || 'http://localhost:3001',
-  PORT: parseInt(process.env.PORT || '3001'),
+  PORT: parseInt(process.env.PORT || '3333'),
 };
 
 export const RATE_LIMIT_CONFIG = {

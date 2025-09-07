@@ -1,7 +1,7 @@
-version: '3.8'
-
 services:
-  opease-frontend-dev:
+  spotx-frontend-dev:
+    env_file:
+      - .env.development
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -25,7 +25,7 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - opease-dev-network
+      - spotx-dev-network
 
   # Optional: Backend service for API calls
   # Uncomment if you have a backend service
@@ -36,10 +36,10 @@ services:
   #   environment:
   #     - NODE_ENV=development
   #   networks:
-  #     - opease-dev-network
+  #     - spotx-dev-network
 
 networks:
-  opease-dev-network:
+  spotx-dev-network:
     driver: bridge
 
 volumes:
