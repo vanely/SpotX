@@ -1,0 +1,44 @@
+services:
+  opease-frontend-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: opease-frontend-prod
+    container_name: opease-frontend-prod
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - opease-prod-network
+      - opease-v2-server_opease-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Backend service for production
+  # Uncomment and configure if you have a backend service
+  # backend:
+  #   image: your-backend-image:latest
+  #   ports:
+  #     - "3333:3333"
+  #   environment:
+  #     - NODE_ENV=production
+  #   restart: unless-stopped
+  #   networks:
+  #     - opease-prod-network
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:3333/health"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+
+networks:
+  opease-prod-network:
+    driver: bridge
+  opease-v2-server_opease-network:
+    external: true

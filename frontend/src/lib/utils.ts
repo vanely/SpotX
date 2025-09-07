@@ -41,7 +41,7 @@ export const getDirectionsUrl = (
   }
 };
 
-export const generateImageUrl = (key: string, baseUrl: string = import.meta.env.VITE_R2_PUBLIC_URL) => {
+export const generateImageUrl = (key: string, baseUrl: string | undefined = process.env.VITE_R2_PUBLIC_URL) => {
   if (!key) return '';
   if (key.startsWith('http')) return key;
   return `${baseUrl}/${key}`;
@@ -65,6 +65,20 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
 export const getErrorMessage = (error: unknown): string => {
   if (error instanceof Error) return error.message;
   return String(error);
+};
+
+export const getPublicAssetUrl = (path: string): string => {
+  // Remove leading slash if present to avoid double slashes
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `/${cleanPath}`;
+};
+
+export const getIconUrl = (iconName: string): string => {
+  return getPublicAssetUrl(`assets/icons/${iconName}`);
+};
+
+export const getImageUrl = (imagePath: string): string => {
+  return getPublicAssetUrl(`assets/images/${imagePath}`);
 };
 
 export const debounce = <F extends (...args: any[]) => any>(

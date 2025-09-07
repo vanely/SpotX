@@ -23,4 +23,8 @@ const Slider = React.forwardRef<
 ));
 Slider.displayName = SliderPrimitive.Root.displayName;
 
-export { Slider, SliderTrack: SliderPrimitive.Track, SliderRange: SliderPrimitive.Range, SliderThumb: SliderPrimitive.Thumb };
+const SliderTrack = SliderPrimitive.Track;
+const SliderRange = SliderPrimitive.Range;
+const SliderThumb = SliderPrimitive.Thumb;
+
+export { Slider, SliderTrack, SliderRange, SliderThumb };
