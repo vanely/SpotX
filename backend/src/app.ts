@@ -6,17 +6,17 @@ import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 
 // Import routes
-import { authRoutes } from '@/routes/auth.routes';
-import { uploadsRoutes } from '@/routes/uploads.routes';
-import { spotsRoutes } from '@/routes/spots.routes';
-import { categoriesRoutes } from '@/routes/categories.routes';
-import { usersRoutes } from '@/routes/users.routes';
+import { authRoutes } from './routes/auth.routes';
+import { uploadsRoutes } from './routes/uploads.routes';
+import { spotsRoutes } from './routes/spots.routes';
+import { categoriesRoutes } from './routes/categories.routes';
+import { usersRoutes } from './routes/users.routes';
 
 // Import middleware
-import { errorHandler, notFound } from '@/middleware/error.middleware';
+import { errorHandler, notFound } from './middleware/error.middleware';
 
 // Import constants
-import { APP_CONFIG, RATE_LIMIT_CONFIG } from '@/utils/constants';
+import { APP_CONFIG, RATE_LIMIT_CONFIG } from './utils/constants';
 
 // Load environment variables
 dotenv.config();

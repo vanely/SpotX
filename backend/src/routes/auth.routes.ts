@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { AuthController } from '@/controllers/auth.controller';
-import { authenticate } from '@/middleware/auth.middleware';
-import { validateBody, validateParams } from '@/middleware/validation.middleware';
+import { AuthController } from '../controllers/auth.controller';
+import { authenticate } from '../middleware/auth.middleware';
+import { validateBody, validateParams } from '../middleware/validation.middleware';
 import { 
   loginSchema, 
   verifyMagicLinkSchema, 
   updateProfileSchema 
-} from '@/utils/validation.util';
+} from '../utils/validation.util';
 import { z } from 'zod';
 
 const router = Router();

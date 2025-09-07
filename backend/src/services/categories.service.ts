@@ -503,7 +503,7 @@ export class CategoriesService {
       officialCategories: officialCount,
       proposedCategories: proposedCount,
       totalTags,
-      tagsByCategory: tagsByCategory.map((item) => ({
+      tagsByCategory: tagsByCategory.map((item: any) => ({
         category: item.category,
         count: item._count.id,
       })),

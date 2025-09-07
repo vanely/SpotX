@@ -1,5 +1,5 @@
 // Prisma client and types access helper
-export { PrismaClient } from '../../prisma/client';
+export { PrismaClient } from '@prisma/client';
 export { db } from '../config/database.config';
 
 // Re-export all Prisma types for convenience
@@ -21,4 +21,4 @@ export type {
   EventAttendeeStatus,
   ReportType,
   ReportStatus,
-} from '../../prisma/client';
+} from '@prisma/client';

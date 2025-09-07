@@ -53,7 +53,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB:-spotx_db}
       - POSTGRES_USER=${POSTGRES_USER:-spotx_user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-secure_password_2024}
-      - POSTGRES_INITDB_ARGS=${POSTGRES_INITDB_ARGS:--encoding=UTF-8 --lc-collate=C --lc-ctype=C}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:
       - spotx_postgres_data:/var/lib/postgresql/data
     restart: unless-stopped

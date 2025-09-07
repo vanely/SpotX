@@ -204,7 +204,7 @@ export class UsersService {
       db.user.count({ where: whereClause }),
     ]);
 
-    const formattedUsers = users.map(user => ({
+    const formattedUsers = users.map((user: any) => ({
       ...user,
       createdAt: user.createdAt.toISOString(),
     }));
@@ -275,7 +275,7 @@ export class UsersService {
       skip: offset,
     });
 
-    return spots.map(spot => ({
+    return spots.map((spot: any) => ({
       ...spot,
       createdAt: spot.createdAt.toISOString(),
       updatedAt: spot.updatedAt.toISOString(),
@@ -354,7 +354,7 @@ export class UsersService {
 
     return {
       ...this.formatCollectionResponse(collection),
-      spots: collection.spots.map(spot => ({
+      spots: collection.spots.map((spot: any) => ({
         id: spot.id,
         order: spot.order,
         createdAt: spot.createdAt.toISOString(),

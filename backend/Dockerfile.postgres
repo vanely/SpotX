@@ -1,10 +1,10 @@
-FROM docker.io/library/postgres:15-alpine
+FROM postgis/postgis:latest
 
 # Install additional tools for debugging and monitoring
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     curl \
     postgresql-contrib \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy custom PostgreSQL configuration
 COPY config/postgres.conf /etc/postgresql/postgresql.conf
@@ -12,14 +12,7 @@ COPY config/postgres.conf /etc/postgresql/postgresql.conf
 # Copy initialization scripts
 COPY config/init.sql /docker-entrypoint-initdb.d/01-init.sql
 
-# Accept build argument for password, with default fallback
-ARG POSTGRES_PASSWORD=some-secure-password
-
-# Set environment variables
-ENV POSTGRES_DB=spotx_db
-ENV POSTGRES_USER=spotx_user
-ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-ENV POSTGRES_INITDB_ARGS="--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+# Environment variables will be set by docker-compose.dev.yml
 
 # Use custom configuration
 CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
@@ -27,6 +20,6 @@ CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
 # Expose PostgreSQL port
 EXPOSE 5432
 
-# Health check
+# Health check (will use environment variables from docker-compose)
 HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=5 \
-  CMD pg_isready -U spotx_user -d spotx_db
+  CMD pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}

@@ -1,10 +1,10 @@
 import { User } from '../lib/prisma';
 import crypto from 'crypto';
-import { db } from '@/config/database.config';
-import { generateToken } from '@/utils/jwt.util';
-import { APP_CONFIG, ERROR_MESSAGES } from '@/utils/constants';
+import { db } from '../config/database.config';
+import { generateToken } from '../utils/jwt.util';
+import { APP_CONFIG, ERROR_MESSAGES } from '../utils/constants';
 import { EmailService } from './email.service';
-import { AuthenticatedUser, MagicLinkData } from '@/types/auth.types';
+import { AuthenticatedUser, MagicLinkData } from '../types/auth.types';
 
 export class AuthService {
   private emailService: EmailService;

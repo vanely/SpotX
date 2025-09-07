@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { AuthService } from '@/services/auth.service';
-import { EmailService } from '@/services/email.service';
-import { HTTP_STATUS, SUCCESS_MESSAGES, ERROR_MESSAGES } from '@/utils/constants';
-import { asyncHandler } from '@/middleware/error.middleware';
-import { AuthenticatedRequest } from '@/middleware/auth.middleware';
-import { LoginRequest, VerifyMagicLinkRequest } from '@/types/auth.types';
+import { AuthService } from '../services/auth.service';
+import { EmailService } from '../services/email.service';
+import { HTTP_STATUS, SUCCESS_MESSAGES, ERROR_MESSAGES } from '../utils/constants';
+import { asyncHandler } from '../middleware/error.middleware';
+import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { LoginRequest, VerifyMagicLinkRequest } from '../types/auth.types';
 
 export class AuthController {
   private authService: AuthService;

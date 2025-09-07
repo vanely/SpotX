@@ -1,5 +1,5 @@
-import { db } from '@/config/database.config';
-import { ERROR_MESSAGES } from '@/utils/constants';
+import { db } from '../config/database.config';
+import { ERROR_MESSAGES } from '../utils/constants';
 import { 
   SpotWithDetails, 
   CreateSpotRequest, 
@@ -9,8 +9,8 @@ import {
   RateSpotRequest,
   AddSpotTagRequest,
   SpotStats
-} from '@/types/spots.types';
-import { PaginatedResponse } from '@/types/api.types';
+} from '../types/spots.types';
+import { PaginatedResponse } from '../types/api.types';
 
 export class SpotsService {
   async createSpot(userId: string, data: CreateSpotRequest): Promise<SpotWithDetails> {
@@ -438,7 +438,7 @@ export class SpotsService {
       });
 
       // Merge distance data with enriched spots
-      spots = enrichedSpots.map((spot) => {
+      spots = enrichedSpots.map((spot: any) => {
         const distanceData = spots.find((s) => s.id === spot.id);
         return {
           ...spot,
@@ -533,7 +533,7 @@ export class SpotsService {
       LIMIT 100
     `;
 
-    return spots.map((spot) => ({
+    return spots.map((spot: any) => ({
       id: spot.id,
       title: spot.title,
       latitude: spot.latitude,
@@ -682,7 +682,7 @@ export class SpotsService {
     ]);
 
     // Enrich categories with names
-    const categoryIds = spotsByCategory.map((item) => item.categoryId);
+    const categoryIds = spotsByCategory.map((item: any) => item.categoryId);
     const categories = await db.category.findMany({
       where: {
         id: { in: categoryIds },
@@ -693,17 +693,17 @@ export class SpotsService {
       },
     });
 
-    const categoryMap = new Map(categories.map((cat) => [cat.id, cat.name]));
+    const categoryMap = new Map(categories.map((cat: any) => [cat.id, cat.name]));
 
     return {
       totalSpots,
-      spotsByCategory: spotsByCategory.map((item) => ({
+      spotsByCategory: spotsByCategory.map((item: any) => ({
         categoryId: item.categoryId,
         categoryName: categoryMap.get(item.categoryId) || 'Unknown',
         count: item._count.id,
       })),
       recentSpots: recentSpotsCount,
-      topContributors: topContributors.map((user) => ({
+      topContributors: topContributors.map((user: any) => ({
         userId: user.id,
         username: user.username || 'Anonymous',
         spotCount: user._count.spots,
