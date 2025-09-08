@@ -39,8 +39,8 @@ export const createSpot = async (data: CreateSpotRequest): Promise<Spot> => {
   return api.post('/spots', data);
 };
 
-export const updateSpot = async (data: UpdateSpotRequest): Promise<Spot> => {
-  return api.put(`/spots/${data.id}`, data);
+export const updateSpot = async (id: string, data: Omit<UpdateSpotRequest, 'id'>): Promise<Spot> => {
+  return api.put(`/spots/${id}`, data);
 };
 
 export const deleteSpot = async (spotId: string): Promise<{ success: boolean }> => {
@@ -61,4 +61,19 @@ export const removeTagFromSpot = async (spotTagId: string): Promise<{ success: b
 
 export const getSpotStats = async (): Promise<SpotStats> => {
   return api.get('/spots/stats');
+};
+
+// Additional functions for hooks compatibility
+export const getSpots = async (filters?: {
+  categoryId?: string;
+  userId?: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<Spot[]> => {
+  return api.get('/spots', { params: filters });
+};
+
+export const getSpot = async (id: string): Promise<Spot> => {
+  return api.get(`/spots/${id}`);
 };

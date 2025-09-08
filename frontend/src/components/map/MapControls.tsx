@@ -3,7 +3,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { categoriesApi } from '@/api';
-import { Category } from '@/types/spots';
+import { Category } from '@/types/categories';
 import { useMapStore } from '@/store/map';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,7 +28,7 @@ const MapControls = () => {
   // Fetch categories
   const { data: categories, isLoading } = useQuery({
     queryKey: ['categories'],
-    queryFn: categoriesApi.getAllCategories,
+    queryFn: categoriesApi.getCategories,
   });
   
   // Handle outside click to close popover

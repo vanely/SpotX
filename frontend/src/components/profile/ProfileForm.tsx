@@ -97,7 +97,7 @@ const ProfileForm = ({ user, onSubmit, isSubmitting }: ProfileFormProps) => {
       // Submit updated profile
       await onSubmit({
         ...data,
-        avatar: avatarUrl,
+        avatar: avatarUrl || undefined,
       });
     } catch (error) {
       console.error('Error submitting profile:', error);

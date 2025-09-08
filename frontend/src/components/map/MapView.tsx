@@ -108,10 +108,31 @@ const MapView = ({
   useEffect(() => {
     if (!map.current) return;
 
-    // This would normally use a satellite tile source - for demo we're just toggling styles
+    // Use satellite imagery when satellite view is enabled
     if (isSatelliteView) {
-      map.current.setStyle('https://demotiles.maplibre.org/style.json');
+      // Use OpenStreetMap satellite tiles
+      map.current.setStyle({
+        version: 8,
+        sources: {
+          'satellite': {
+            type: 'raster',
+            tiles: [
+              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+            ],
+            tileSize: 256,
+            attribution: '© Esri'
+          }
+        },
+        layers: [
+          {
+            id: 'satellite-layer',
+            type: 'raster',
+            source: 'satellite'
+          }
+        ]
+      });
     } else {
+      // Use default MapLibre style
       map.current.setStyle(MAP_STYLE_URL);
     }
   }, [isSatelliteView]);

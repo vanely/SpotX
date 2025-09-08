@@ -20,5 +20,8 @@ EXPOSE 3000
 ENV NODE_ENV=development
 ENV VITE_DEV_SERVER_HOST=0.0.0.0
 
+# Copy environment files if they exist
+COPY .env* ./
+
 # Start development server with hot reloading
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

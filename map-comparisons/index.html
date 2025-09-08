@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpotX - Map Provider Comparison</title>
+    
+    <!-- Google Maps API -->
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuVQxmCxS-CedTl7h-PoTmw8HPp7EZvCg&callback=initGoogleMap">
+    </script>
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <!-- MapLibre GL JS -->
+    <script src='https://unpkg.com/maplibre-gl@4.0.2/dist/maplibre-gl.js'></script>
+    <link href='https://unpkg.com/maplibre-gl@4.0.2/dist/maplibre-gl.css' rel='stylesheet' />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .map-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .map-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .map-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1e293b;
+        }
+        
+        .map-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .badge-premium { background: #fef3c7; color: #92400e; }
+        .badge-balanced { background: #d1fae5; color: #065f46; }
+        .badge-free { background: #dbeafe; color: #1e40af; }
+        
+        .map {
+            height: 400px;
+            width: 100%;
+        }
+        
+        .map-footer {
+            padding: 12px 20px;
+            background: #f8fafc;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        
+        .pros-cons {
+            margin-top: 8px;
+        }
+        
+        .pros-cons strong {
+            color: #374151;
+        }
+        
+        .status-bar {
+            background: #1e293b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .api-key-warning {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-container {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SpotX Map Provider Comparison</h1>
+        <p>Satellite view quality comparison for spot identification</p>
+    </div>
+    
+    <div class="api-key-warning">
+        <strong>⚠️ Demo Note:</strong> Google Maps and Mapbox require API keys. Replace "YOUR_GOOGLE_MAPS_API_KEY" and "YOUR_MAPBOX_TOKEN" with actual keys to see live satellite imagery.
+    </div>
+    
+    <div class="status-bar">
+        📍 Viewing: Venice Beach Skate Park, CA (Perfect test location for skateboarding spots)
+    </div>
+    
+    <div class="comparison-grid">
+        <!-- Google Maps -->
+        <div class="map-container">
+            <div class="map-header">
+                <div class="map-title">Google Maps Satellite</div>
+                <div class="map-badge badge-premium">Premium Quality</div>
+            </div>
+            <div id="googleMap" class="map"></div>
+            <div class="map-footer">
+                <strong>Pricing:</strong> $7/1000 loads after 28k free monthly
+                <div class="pros-cons">
+                    <strong>Best for:</strong> Highest resolution, most recent imagery<br>
+                    <strong>Perfect for SpotX:</strong> Crystal clear spot identification
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mapbox -->
+        <div class="map-container">
+            <div class="map-header">
+                <div class="map-title">Mapbox Satellite</div>
+                <div class="map-badge badge-balanced">Best Balance</div>
+            </div>
+            <div id="mapboxMap" class="map"></div>
+            <div class="map-footer">
+                <strong>Pricing:</strong> 50k free loads/month, then $5/1000
+                <div class="pros-cons">
+                    <strong>Best for:</strong> Great quality + better pricing<br>
+                    <strong>Perfect for SpotX:</strong> Excellent spot detail at scale
+                </div>
+            </div>
+        </div>
+        
+        <!-- MapLibre -->
+        <div class="map-container">
+            <div class="map-header">
+                <div class="map-title">MapLibre + Satellite Tiles</div>
+                <div class="map-badge badge-free">Budget Friendly</div>
+            </div>
+            <div id="maplibreMap" class="map"></div>
+            <div class="map-footer">
+                <strong>Pricing:</strong> Free with OSM providers
+                <div class="pros-cons">
+                    <strong>Best for:</strong> Cost-effective solution<br>
+                    <strong>Perfect for SpotX:</strong> Good quality for MVP launch
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Venice Beach Skate Park coordinates - perfect for testing skate spot visibility
+        const CENTER_LAT = 33.9850;
+        const CENTER_LNG = -118.4695;
+        const ZOOM_LEVEL = 18;
+
+        // Initialize Google Maps
+        window.initGoogleMap = function() {
+            try {
+                const googleMap = new google.maps.Map(document.getElementById('googleMap'), {
+                    center: { lat: CENTER_LAT, lng: CENTER_LNG },
+                    zoom: ZOOM_LEVEL,
+                    mapTypeId: google.maps.MapTypeId.SATELLITE,
+                    disableDefaultUI: false,
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    streetViewControl: false,
+                    fullscreenControl: true
+                });
+
+                // Add a marker for the skate park
+                new google.maps.Marker({
+                    position: { lat: CENTER_LAT, lng: CENTER_LNG },
+                    map: googleMap,
+                    title: 'Venice Beach Skate Park'
+                });
+            } catch (error) {
+                document.getElementById('googleMap').innerHTML = 
+                    '<div style="padding: 20px; text-align: center; color: #ef4444;">⚠️ Google Maps API key required</div>';
+            }
+        };
+
+        // Initialize Mapbox
+        try {
+            mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN'; // Replace with actual token
+            
+            const mapboxMap = new mapboxgl.Map({
+                container: 'mapboxMap',
+                style: 'mapbox://styles/mapbox/satellite-v9',
+                center: [CENTER_LNG, CENTER_LAT],
+                zoom: ZOOM_LEVEL,
+                attributionControl: true
+            });
+
+            mapboxMap.addControl(new mapboxgl.NavigationControl());
+            
+            mapboxMap.on('load', () => {
+                new mapboxgl.Marker()
+                    .setLngLat([CENTER_LNG, CENTER_LAT])
+                    .addTo(mapboxMap);
+            });
+        } catch (error) {
+            document.getElementById('mapboxMap').innerHTML = 
+                '<div style="padding: 20px; text-align: center; color: #ef4444;">⚠️ Mapbox token required</div>';
+        }
+
+        // Initialize MapLibre with satellite tiles
+        try {
+            const maplibreMap = new maplibregl.Map({
+                container: 'maplibreMap',
+                style: {
+                    version: 8,
+                    sources: {
+                        'satellite': {
+                            type: 'raster',
+                            tiles: [
+                                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+                            ],
+                            tileSize: 256,
+                            attribution: '© Esri'
+                        }
+                    },
+                    layers: [
+                        {
+                            id: 'satellite',
+                            type: 'raster',
+                            source: 'satellite'
+                        }
+                    ]
+                },
+                center: [CENTER_LNG, CENTER_LAT],
+                zoom: ZOOM_LEVEL
+            });
+
+            maplibreMap.addControl(new maplibregl.NavigationControl());
+            
+            maplibreMap.on('load', () => {
+                new maplibregl.Marker()
+                    .setLngLat([CENTER_LNG, CENTER_LAT])
+                    .addTo(maplibreMap);
+            });
+        } catch (error) {
+            document.getElementById('maplibreMap').innerHTML = 
+                '<div style="padding: 20px; text-align: center; color: #ef4444;">⚠️ Error loading MapLibre</div>';
+        }
+
+        // Fallback if Google Maps doesn't load
+        setTimeout(() => {
+            if (!window.google) {
+                document.getElementById('googleMap').innerHTML = 
+                    '<div style="padding: 20px; text-align: center; color: #ef4444;">⚠️ Google Maps API key required<br><small>Add your API key to see satellite imagery</small></div>';
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

@@ -8,7 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import { categoriesApi } from '@/api';
 import { useGeolocation, useUpload } from '@/hooks';
 import { useMapStore } from '@/store/map';
-import { CreateSpotRequest, Category } from '@/types/spots';
+import { CreateSpotRequest } from '@/types/spots';
+import { Category } from '@/types/categories';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -63,7 +64,7 @@ const SpotForm = ({ initialData, onSubmit, isSubmitting }: SpotFormProps) => {
   // Fetch categories
   const { data: categories, isLoading: isCategoriesLoading } = useQuery({
     queryKey: ['categories'],
-    queryFn: categoriesApi.getAllCategories,
+    queryFn: categoriesApi.getCategories,
   });
   
   // Form setup with validation

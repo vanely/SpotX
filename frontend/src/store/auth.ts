@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { User, AuthResponse, UserProfile } from '@/types/auth';
+import { User, AuthResponse, UserProfile, ProfileUpdateRequest } from '@/types/auth';
 import { TOKEN_KEY, USER_KEY } from '@/lib/constants';
 import { api } from '@/lib/api-client';
 
@@ -10,42 +10,73 @@ interface AuthState {
   error: string | null;
   
   // Actions
-  login: (token: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
   logout: () => void;
   checkAuth: () => Promise<boolean>;
-  updateProfile: (updatedUser: Partial<User>) => void;
+  updateProfile: (updatedUser: ProfileUpdateRequest) => Promise<void>;
   getUserProfile: () => Promise<UserProfile>;
+  sendMagicLink: (email: string) => Promise<void>;
+  verifyEmail: (token: string) => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   user: JSON.parse(localStorage.getItem(USER_KEY) || 'null'),
   isAuthenticated: !!localStorage.getItem(TOKEN_KEY),
   isLoading: false,
   error: null,
   
-  login: async (token: string) => {
+  login: async (email: string, password: string) => {
     try {
       set({ isLoading: true, error: null });
       
-      // Save token to localStorage
-      localStorage.setItem(TOKEN_KEY, token);
+      const response = await api.post<AuthResponse>('/auth/login', { email, password });
       
-      // Validate token and get user data
-      const response = await api.get<User>('/auth/validate');
+      // Save token to localStorage
+      localStorage.setItem(TOKEN_KEY, response.accessToken);
       
       // Update store with user data
       set({ 
-        user: response, 
+        user: response.user, 
         isAuthenticated: true,
         isLoading: false 
       });
       
       // Save user to localStorage
-      localStorage.setItem(USER_KEY, JSON.stringify(response));
+      localStorage.setItem(USER_KEY, JSON.stringify(response.user));
       
       return;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Login failed';
+      set({ isLoading: false, error: errorMessage, isAuthenticated: false });
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      throw error;
+    }
+  },
+
+  register: async (email: string, password: string) => {
+    try {
+      set({ isLoading: true, error: null });
+      
+      const response = await api.post<AuthResponse>('/auth/register', { email, password });
+      
+      // Save token to localStorage
+      localStorage.setItem(TOKEN_KEY, response.accessToken);
+      
+      // Update store with user data
+      set({ 
+        user: response.user, 
+        isAuthenticated: true,
+        isLoading: false 
+      });
+      
+      // Save user to localStorage
+      localStorage.setItem(USER_KEY, JSON.stringify(response.user));
+      
+      return;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
       set({ isLoading: false, error: errorMessage, isAuthenticated: false });
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
@@ -89,13 +120,72 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
   
-  updateProfile: (updatedUser: Partial<User>) => {
-    const currentUser = get().user;
-    if (!currentUser) return;
-    
-    const newUser = { ...currentUser, ...updatedUser };
-    set({ user: newUser });
-    localStorage.setItem(USER_KEY, JSON.stringify(newUser));
+  updateProfile: async (updatedUser: ProfileUpdateRequest) => {
+    try {
+      set({ isLoading: true, error: null });
+      
+      const response = await api.put<User>('/auth/profile', updatedUser);
+      
+      // Update store with updated user data
+      set({ 
+        user: response, 
+        isLoading: false 
+      });
+      
+      // Update stored user
+      localStorage.setItem(USER_KEY, JSON.stringify(response));
+      
+      return;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Profile update failed';
+      set({ isLoading: false, error: errorMessage });
+      throw error;
+    }
+  },
+
+  sendMagicLink: async (email: string) => {
+    try {
+      set({ isLoading: true, error: null });
+      
+      await api.post('/auth/send-magic-link', { email });
+      
+      set({ isLoading: false });
+      
+      return;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
+      set({ isLoading: false, error: errorMessage });
+      throw error;
+    }
+  },
+
+  verifyEmail: async (token: string) => {
+    try {
+      set({ isLoading: true, error: null });
+      
+      const response = await api.post<AuthResponse>('/auth/verify-magic-link', { token });
+      
+      // Save token to localStorage
+      localStorage.setItem(TOKEN_KEY, response.accessToken);
+      
+      // Update store with user data
+      set({ 
+        user: response.user, 
+        isAuthenticated: true,
+        isLoading: false 
+      });
+      
+      // Save user to localStorage
+      localStorage.setItem(USER_KEY, JSON.stringify(response.user));
+      
+      return;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Email verification failed';
+      set({ isLoading: false, error: errorMessage, isAuthenticated: false });
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      throw error;
+    }
   },
   
   getUserProfile: async () => {

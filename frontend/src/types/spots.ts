@@ -92,6 +92,7 @@ export interface SpotSearchParams {
   longitude?: number;
   radius?: number;
   categoryId?: string;
+  userId?: string;
   tags?: string[];
   search?: string;
   limit?: number;

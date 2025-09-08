@@ -1,16 +1,13 @@
-import React from 'react';
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { MapView, SpotDetailCard } from '@/components/map';
+import { UnifiedMapView, SpotDetailCard, MapProviderToggle } from '@/components/map';
 import { Button } from '@/components/ui/button';
 import { useMapStore } from '@/store/map';
 import { useGeolocation } from '@/hooks';
 import { spotsApi } from '@/api';
 import { Plus, ChevronUp, ChevronDown, Map, List } from 'lucide-react';
 import { useUIStore } from '@/store/ui';
-import { Spot } from '@/types/spots';
 import { SpotCard } from '@/components/spots';
 import { cn } from '@/lib/utils';
 
@@ -22,7 +19,7 @@ const MapPage = () => {
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   
   // Fetch nearby spots
-  const { data: spots, isLoading, refetch } = useQuery({
+  const { data: spots, isLoading } = useQuery({
     queryKey: ['nearby-spots', center, searchRadius, selectedCategories],
     queryFn: async () => {
       const latitude = userLocation?.latitude || center[1];
@@ -77,7 +74,10 @@ const MapPage = () => {
         'h-full w-full transition-all duration-300',
         viewMode === 'list' && 'hidden md:block'
       )}>
-        <MapView onMarkerClick={handleMarkerClick} />
+        <UnifiedMapView onMarkerClick={handleMarkerClick} />
+        
+        {/* Map Provider Toggle - Development Only */}
+        <MapProviderToggle />
         
         {/* Add Spot Button */}
         <div className="absolute bottom-20 right-4 z-20">

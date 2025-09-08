@@ -12,7 +12,7 @@ import { MapPin, Loader2, CheckCircle, XCircle } from 'lucide-react';
 const VerifyPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login } = useAuthStore();
+  const { verifyEmail } = useAuthStore();
   const { toast } = useToast();
   
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
@@ -30,10 +30,7 @@ const VerifyPage = () => {
       
       try {
         // Verify magic link with the backend
-        const response = await authApi.verifyMagicLink({ token });
-        
-        // Store authentication token
-        await login(response.accessToken);
+        await verifyEmail(token);
         
         // Show success
         setStatus('success');
@@ -62,7 +59,7 @@ const VerifyPage = () => {
     };
     
     verifyToken();
-  }, [searchParams, login, navigate, toast]);
+  }, [searchParams, verifyEmail, navigate, toast]);
   
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-muted/30">

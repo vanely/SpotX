@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { DEFAULT_CENTER, DEFAULT_ZOOM } from '@/lib/constants';
+import { DEFAULT_CENTER, DEFAULT_ZOOM, DEV_CONFIG } from '@/lib/constants';
 import { Coordinates } from '@/types/common';
 
 interface MapState {
@@ -11,6 +11,9 @@ interface MapState {
   selectedSpotId: string | null;
   userLocation: Coordinates | null;
   newSpotCoordinates: Coordinates | null;
+  
+  // Map provider
+  mapProvider: 'maplibre' | 'google';
   
   // Filters
   selectedCategories: string[];
@@ -30,6 +33,7 @@ interface MapState {
   clearCategoryFilters: () => void;
   setSearchRadius: (radius: number) => void;
   resetMapView: () => void;
+  setMapProvider: (provider: 'maplibre' | 'google') => void;
 }
 
 export const useMapStore = create<MapState>()(
@@ -39,10 +43,11 @@ export const useMapStore = create<MapState>()(
       center: DEFAULT_CENTER,
       zoom: DEFAULT_ZOOM,
       styleUrl: 'https://demotiles.maplibre.org/style.json',
-      isSatelliteView: false,
+      isSatelliteView: true,
       selectedSpotId: null,
       userLocation: null,
       newSpotCoordinates: null,
+      mapProvider: DEV_CONFIG.USE_GOOGLE_MAPS ? 'google' : 'maplibre',
       selectedCategories: [],
       searchRadius: 5, // 5km default radius
       
@@ -86,11 +91,13 @@ export const useMapStore = create<MapState>()(
       setSearchRadius: (radius) => set({ searchRadius: radius }),
       
       resetMapView: () => set((state) => ({
-        center: state.userLocation ? [state.userLocation.longitude, state.userLocation.latitude] : DEFAULT_CENTER,
+        center: state.userLocation ? [state.userLocation.longitude, state.userLocation.latitude] as [number, number] : DEFAULT_CENTER,
         zoom: DEFAULT_ZOOM,
         selectedSpotId: null,
         newSpotCoordinates: null
       })),
+      
+      setMapProvider: (provider) => set({ mapProvider: provider }),
     }),
     {
       name: 'spotx-map-storage',
@@ -98,6 +105,7 @@ export const useMapStore = create<MapState>()(
         isSatelliteView: state.isSatelliteView,
         selectedCategories: state.selectedCategories,
         searchRadius: state.searchRadius,
+        mapProvider: state.mapProvider,
       }),
     }
   )

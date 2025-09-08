@@ -10,7 +10,7 @@ export const MAP_STYLE_URL = process.env.VITE_MAPLIBRE_STYLE_URL || 'https://dem
 export const DEFAULT_ZOOM = Number(process.env.VITE_MAP_INITIAL_ZOOM || 13);
 export const MIN_ZOOM = Number(process.env.VITE_MAP_MIN_ZOOM || 3);
 export const MAX_ZOOM = Number(process.env.VITE_MAP_MAX_ZOOM || 18);
-export const DEFAULT_CENTER = [-73.9857, 40.7484]; // New York City by default
+export const DEFAULT_CENTER: [number, number] = [-73.9857, 40.7484]; // New York City by default
 
 // Upload related
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -35,6 +35,12 @@ export const FEATURES = {
   SPOT_TAGGING: true,
   OFFLINE_MODE: false,
   EVENTS: false,
+};
+
+// Development mode settings
+export const DEV_CONFIG = {
+  USE_GOOGLE_MAPS: process.env.NODE_ENV === 'development' && process.env.VITE_USE_GOOGLE_MAPS === 'true',
+  GOOGLE_MAPS_API_KEY: process.env.VITE_GOOGLE_MAPS_API_KEY || '',
 };
 
 // Category colors
