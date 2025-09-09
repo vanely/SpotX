@@ -19,7 +19,12 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      host: '0.0.0.0', // Allow external connections (needed for Docker)
       port: 3000,
+      watch: {
+        usePolling: true, // Enable polling for file watching in Docker
+        interval: 1000, // Polling interval in milliseconds
+      },
       proxy: {
         '/api': {
           target: 'http://localhost:3333',

@@ -17,10 +17,13 @@ services:
       - ./tsconfig.node.json:/app/tsconfig.node.json
       - ./package.json:/app/package.json
       - ./package-lock.json:/app/package-lock.json
-      # Mount environment files
-      - ./.env:/app/.env
-      - ./.env.development:/app/.env.development
-      - ./.env.local:/app/.env.local
+      - ./tailwind.config.js:/app/tailwind.config.js
+      - ./postcss.config.js:/app/postcss.config.js
+      - ./components.json:/app/components.json
+      # Mount environment files (only if they exist)
+      - ./.env:/app/.env:ro
+      - ./.env.development:/app/.env.development:ro
+      - ./.env.local:/app/.env.local:ro
       # Exclude node_modules and dist to avoid conflicts
       - /app/node_modules
       - /app/dist
