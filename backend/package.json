@@ -14,6 +14,11 @@
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
+    "db:setup": "./scripts/db-setup.sh setup",
+    "db:push": "./scripts/db-setup.sh push",
+    "db:status": "./scripts/db-setup.sh status",
+    "db:reset": "./scripts/db-setup.sh reset",
+    "db:shell": "./scripts/db-setup.sh shell",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "type-check": "tsc --noEmit"

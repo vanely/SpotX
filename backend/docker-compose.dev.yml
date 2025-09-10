@@ -75,16 +75,17 @@ services:
 
   # pgAdmin for PostgreSQL Management
   pgadmin:
-    env_file:
-      - .env.development
     image: dpage/pgadmin4:latest
     container_name: spotx-pgadmin-dev
     ports:
-      - "8080:8080"
+      - "8081:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@spotx.app
       PGADMIN_DEFAULT_PASSWORD: admin123
       PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: 'False'
+      PGADMIN_CONFIG_WTF_CSRF_ENABLED: 'False'
     volumes:
       - spotx_pgadmin_data:/var/lib/pgadmin
     depends_on:

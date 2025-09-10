@@ -1,10 +1,10 @@
 import nodemailer from 'nodemailer';
 
 export const emailConfig = {
-  from: process.env.EMAIL_FROM || 'noreply@spotx.app',
-  service: process.env.EMAIL_SERVICE || 'gmail',
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.EMAIL_PORT || '587'),
+  from: process.env.EMAIL_FROM,
+  service: process.env.EMAIL_SERVICE,
+  host: process.env.EMAIL_HOST,
+  port: parseInt(process.env.EMAIL_PORT as string),
   user: process.env.EMAIL_USER,
   pass: process.env.EMAIL_PASS,
 };
