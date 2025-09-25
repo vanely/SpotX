@@ -74,20 +74,35 @@ services:
           cpus: '0.5'
 
   # pgAdmin for PostgreSQL Management
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: spotx-pgadmin-dev
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   container_name: spotx-pgadmin-dev
+  #   ports:
+  #     - "8081:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@spotx.app
+  #     PGADMIN_DEFAULT_PASSWORD: admin123
+  #     PGADMIN_CONFIG_SERVER_MODE: 'False'
+  #     PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+  #     PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: 'False'
+  #     PGADMIN_CONFIG_WTF_CSRF_ENABLED: 'False'
+  #   volumes:
+  #     - spotx_pgadmin_data:/var/lib/pgadmin
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+  #   networks:
+  #     - spotx-network
+
+  # Adminer for lightweight PostgreSQL Management
+  adminer:
+    image: adminer:latest
+    container_name: spotx-adminer-dev
     ports:
-      - "8081:80"
+      - "8082:8080"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@spotx.app
-      PGADMIN_DEFAULT_PASSWORD: admin123
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
-      PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: 'False'
-      PGADMIN_CONFIG_WTF_CSRF_ENABLED: 'False'
-    volumes:
-      - spotx_pgadmin_data:/var/lib/pgadmin
+      ADMINER_DEFAULT_SERVER: postgres
     depends_on:
       postgres:
         condition: service_healthy

@@ -1,5 +1,6 @@
 services:
   spotx-frontend-dev:
+    container_name: spotx-app-dev
     env_file:
       - .env.development
     build:
